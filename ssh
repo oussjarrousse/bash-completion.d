@@ -1,0 +1,18 @@
+# Inspired/Copied from:
+# https://unix.stackexchange.com/questions/136351/autocomplete-server-names-for-ssh-and-scp 
+# Credits to:
+# - @dotancohen - https://unix.stackexchange.com/users/9760/dotancohen
+# - @Jeroen Vermeulen - MageHost - https://unix.stackexchange.com/users/27458/jeroen-vermeulen-magehost
+#
+_ssh() 
+{
+    local cur prev opts
+    COMPREPLY=()
+    cur="${COMP_WORDS[COMP_CWORD]}"
+    prev="${COMP_WORDS[COMP_CWORD-1]}"
+    opts=$(grep '^Host' ~/.ssh/config ~/.ssh/config.d/* 2>/dev/null | grep -v '[?*]' | cut -d ' ' -f 2-)
+
+    COMPREPLY=( $(compgen -W "$opts" -- ${cur}) )
+    return 0
+}
+complete -F _ssh ssh
